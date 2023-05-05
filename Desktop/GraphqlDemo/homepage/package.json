@@ -1,0 +1,28 @@
+{
+  "name": "homepage",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.13",
+    "@opentelemetry/api": "^1.4.1",
+    "@opentelemetry/instrumentation": "^0.38.0",
+    "@opentelemetry/resources": "^1.12.0",
+    "@opentelemetry/sdk-trace-node": "^1.12.0",
+    "@opentelemetry/semantic-conventions": "^1.12.0",
+    "@tilework/mosaic": "^1.0.0",
+    "@tilework/mosaic-nextjs-scripts": "^0.1.28",
+    "add": "^2.0.6",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
+    "graphql": "^16.6.0",
+    "next": "13.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
