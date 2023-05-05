@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import style from '../styles/homepage.module.css';
-import Image from 'next/image'
+import Link from 'next/link';
+
 const ProductListing = ({ data }) => {
     const [propsData, setPropsData] = useState([]);
 
@@ -9,7 +10,7 @@ const ProductListing = ({ data }) => {
         setPropsData(data);
     }, [])
 
-    // console.log(propsData.fsyncHomeSlider?.homeSliderSlides, "datataysfhd")
+    console.log(propsData.fsyncHomeSlider?.homeSliderSlides, "datataysfhd")
     return (
         <div className="container-fluid" >
             <h1 className={style.headerTitle}>{propsData?.fsyncHomeSlider?.banner_title[0].title}</h1>
@@ -18,10 +19,10 @@ const ProductListing = ({ data }) => {
                     return (
                         <div className="card col-3" id={style.card}>
                                 <div className="card-body">
-                                    <Image src="" alt="products"/>
+                                    <img src={`${`https://frontend.hypernode.frontrunneroutfitters.com`}${products.image}`} alt="products" width='100%' />
                                     <h5 className={`$card-title $cardTitle`}>{products?.title}</h5>
                                     <p className="card-text">{products?.subtitle}</p>
-                                    <a href={products.url} class="btn btn-primary">{products?.url_text}</a>
+                                    <Link href={products.url} class="btn btn-primary">{products?.url_text}</Link>
                                 </div>
                         </div>
                     )
