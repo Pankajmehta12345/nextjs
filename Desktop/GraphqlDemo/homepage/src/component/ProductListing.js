@@ -1,85 +1,33 @@
 import React, { useEffect, useState } from 'react'
-import styles from '../styles/Home.module.css';
-import Head from "next/head";
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import style from '../styles/homepage.module.css';
+import Image from 'next/image'
+const ProductListing = ({ data }) => {
+    const [propsData, setPropsData] = useState([]);
 
-const ProductListing = () => {
-    const [data, setData] = useState([])
     useEffect(() => {
-        fetchData();
+        setPropsData(data);
     }, [])
 
-    const fetchData = async () => {
-        var myHeaders = new Headers();
-        myHeaders.append("store", "en_us");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Cookie", "PHPSESSID=3djegti9v08e3sgg8m8v7m9mmg; mage-messages=%5B%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%5D; private_content_version=9fd21e932bfc0661768908f6c9f1ec00; redirect_value=en_de");
-        var graphql = JSON.stringify({
-            query: `query
-            {
-                ($category_id:ID!)
-                {fsyncHomeSlider(category_id: $category_id)
-                    {
-                      banner_title{
-                        title
-                        link_label
-                        link_url
-                      }
-                      homeSliderSlides{
-                        id
-                        title
-                        subtitle
-                        image_mobile
-                        image
-                        type
-                        price
-                        url_text
-                        url
-                        store_id
-                      }
-                    }
-                }
-            }
-          `,
-            variables: { "category_id": 3 }
-        })
-
-        var requestOptions = {
-            method: 'POST',
-            body: graphql,
-            redirect: 'follow',
-            headers:myHeaders,
-        };
-
-        const response = await fetch("https://pwa.hypernode.frontrunneroutfitters.com/graphql", requestOptions);
-        const data = await response.json()
-        console.log(data)
-    };
-
+    // console.log(propsData.fsyncHomeSlider?.homeSliderSlides, "datataysfhd")
     return (
-        <>
-            <div className={styles.container}>
-                <Head>
-                    <title>Create Next App</title>
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
-
-                <main className={styles.main}>
-
-                    <div className={styles.grid}>
-                        {/* {data?.data?.countries?.slice(0, 20).map((country) => (
-                            <div key={country.code} className={styles.card}>
-                                <h3>{country.name}</h3>
-                                <p>
-                                    {country.code} - {country.emoji}
-                                </p>
-                            </div>
-                        ))} */}
-                    </div>
-                </main>
-
+        <div className="container-fluid" >
+            <h1 className={style.headerTitle}>{propsData?.fsyncHomeSlider?.banner_title[0].title}</h1>
+            <div className={style.productList}>
+                {propsData?.fsyncHomeSlider?.homeSliderSlides?.map((products, index) => {
+                    return (
+                        <div className="card col-3" id={style.card}>
+                                <div className="card-body">
+                                    <Image src="" alt="products"/>
+                                    <h5 className={`$card-title $cardTitle`}>{products?.title}</h5>
+                                    <p className="card-text">{products?.subtitle}</p>
+                                    <a href={products.url} class="btn btn-primary">{products?.url_text}</a>
+                                </div>
+                        </div>
+                    )
+                })}
             </div>
-        </>
+        </div>
     )
 }
-
 export default ProductListing;

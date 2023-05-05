@@ -30,3 +30,26 @@
 {
     padding: 0px;
 }
+.headerTitle
+{
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.productList
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#card
+{
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.cardTitle
+{
+    font-size: 20px;
+}

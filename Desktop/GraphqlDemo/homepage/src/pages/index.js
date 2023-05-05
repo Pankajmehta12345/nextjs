@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
-import Product from '@/component/Product';
-export default function Home() {
+import ProductListing from '@/component/ProductListing';
+export default function Home({ data }) {
   return (
     <>
       <Head>
@@ -12,9 +12,36 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Product/>
+      <ProductListing data={data} />
 
       <Footer />
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+
+  var myHeaders = new Headers();
+  myHeaders.append("store", "en_us");
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "PHPSESSID=8fasc4ghrncndbdi3tuut4mo9d; mage-messages=%5B%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%5D; private_content_version=3af2f4cc3eb1e86fe118da797797522e; redirect_value=en_de");
+  myHeaders.append("Access-Control-Allow-Origin", "*")
+
+  var graphql = JSON.stringify({
+    query: "query\n($category_id:ID!)\n{fsyncHomeSlider(category_id: $category_id)\n    {\n      banner_title{\n        title\n        link_label\n        link_url\n      }\n      homeSliderSlides{\n        id\n        title\n        subtitle\n        image_mobile\n        image\n        type\n        price\n        url_text\n        url\n        store_id\n      }\n    }\n}",
+    variables: { "category_id": 3 }
+  })
+
+  var requestOptions = {
+    method: 'POST',
+    body: graphql,
+    redirect: 'follow',
+    headers: myHeaders,
+  };
+
+  const response = await fetch("https://pwa.hypernode.frontrunneroutfitters.com/graphql", requestOptions);
+  const data = await response.json();
+  return {
+    props: data,
+  };
 }
