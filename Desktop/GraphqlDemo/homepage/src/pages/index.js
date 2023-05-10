@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import ProductListing from '@/component/ProductListing';
+import { Field } from '../dynamicQuery/Field';
+import { Fragment } from '../dynamicQuery/Fragment';
 export default function Home({ data }) {
   return (
     <>
@@ -19,14 +21,160 @@ export default function Home({ data }) {
   )
 }
 
+// const getSlides = () => new Field('slides')
+// .addFieldList([
+//     'id',
+//     'language',
+//     'image',
+//     'image_mobile',
+//     'content_top',
+//     'content_top_color',
+//     'content_top_size',
+//     'content_bottom',
+//     'content_bottom_color',
+//     'content_bottom_size',
+//     'content_position',
+//     'content_position_vertical',
+//     'button_text',
+//     'button_url',
+//     'slider_category_id',
+//     'banner_type',
+//     'date_from',
+//     'date_to'
+// ]);
+
+// const fieldValue = new Field('fsyncHomeSlider')
+// .addArgument('category_id', 'ID!', 3)
+// .addField(getSlides())
+// .setAlias('slider');
+
+
+// try
+const fieldValue = _getPageFields()
+const fieldValue1=_getAdventureSections()
+
+function _getPageFields() {
+  return [
+    'id',
+    'name',
+    'slug',
+    _getAdventureType(),
+    _getAdventureSections()
+  ];
+}
+
+function _getAdventureType() {
+  return new Field('type')
+    .addFieldList([
+      'id',
+      'name',
+      'slug'
+    ]);
+}
+
+function _getAdventureSections() {
+  return new Field('sections')
+    .addFieldList([
+      'id',
+      'name',
+      'landing_page_id',
+      'parent_id',
+      'text_header',
+      'text_body',
+      'background_color',
+      'end_date',
+      'start_date',
+      'active',
+      'region',
+      'custom_classes',
+      'landing_pages_section_type_id',
+      _getAdventureBlocks()
+    ]);
+}
+
+function _getAdventureBlocks() {
+  return new Field('blocks')
+    .addFieldList([
+      'id',
+      'block_type',
+      'block_type_simple',
+      _getAdventureBlock()
+    ]);
+}
+
+function _getAdventureBlock() {
+  return new Field('block')
+    .addFieldList([
+      _getProduct(),
+      _getImageGrid(),
+      _getImage(),
+      _getSlider()
+    ]);
+}
+
+function _getProduct() {
+  return new Fragment('Product')
+    .addField([
+      'products',
+      'use_slider'
+    ]);
+}
+
+function _getImageGrid() {
+  return new Fragment('ImageGrid')
+    .addField([
+      'header',
+      'body',
+      'images_count',
+      'columns_count',
+      _getImages()
+    ]);
+}
+
+function _getImage() {
+  return new Fragment('Image')
+    .addField([
+      'image_url'
+    ]);
+}
+
+function _getImages() {
+  return new Fragment('Images')
+    .addField([
+      'desktop_image',
+      'mobile_image',
+      'title',
+      'alt'
+    ]);
+}
+
+function _getSlider() {
+  return new Fragment('Slider')
+    .addField([
+      'slider_category_id'
+    ]);
+}
+
+console.log(fieldValue,"fieldValue");
+console.log(fieldValue1,"fieldValue1");
+
+// 
+
 export async function getServerSideProps(context) {
 
   var myHeaders = new Headers();
   myHeaders.append("store", "en_us");
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "PHPSESSID=8fasc4ghrncndbdi3tuut4mo9d; mage-messages=%5B%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%5D; private_content_version=3af2f4cc3eb1e86fe118da797797522e; redirect_value=en_de");
+  myHeaders.append("Cookie", "PHPSESSID=8fasc4ghrncndbdi3tuut4mo9d; mage-messages=%5B%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%2C%7B%22type%22%3A%22error%22%2C'%22text%22%3A%22Invalid%20Form%20Key.%20Please%20refresh%20the%20page.%22%7D%5D; private_content_version=3af2f4cc3eb1e86fe118da797797522e; redirect_value=en_de");
   myHeaders.append("Access-Control-Allow-Origin", "*")
 
+  // var graphql = JSON.stringify({
+  //   query: "query\n($category_id:ID!)\n{fsyncHomeSlider(category_id: $category_id)\n    {\n      banner_title{\n        title\n        link_label\n        link_url\n      }\n      homeSliderSlides{\n        id\n        title\n        subtitle\n        image_mobile\n        image\n        type\n        price\n        url_text\n        url\n        store_id\n      }\n    }\n}",
+  //   variables: { "category_id": 3 }
+  // })
+
+
+  // try
   var graphql = JSON.stringify({
     query: "query\n($category_id:ID!)\n{fsyncHomeSlider(category_id: $category_id)\n    {\n      banner_title{\n        title\n        link_label\n        link_url\n      }\n      homeSliderSlides{\n        id\n        title\n        subtitle\n        image_mobile\n        image\n        type\n        price\n        url_text\n        url\n        store_id\n      }\n    }\n}",
     variables: { "category_id": 3 }
@@ -45,3 +193,4 @@ export async function getServerSideProps(context) {
     props: data,
   };
 }
+
